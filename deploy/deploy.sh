@@ -32,7 +32,7 @@ kubectl -n "$NS" rollout status deploy/web --timeout=180s
 # Through the node itself first, so this works before DNS points at the cluster.
 echo "→ checking $HOST through $NODE"
 for i in $(seq 1 12); do
-	if curl -ksSf -o /dev/null --resolve "$HOST:443:$NODE" "https://$HOST/healthz"; then break; fi
+	if curl -ksf -o /dev/null --resolve "$HOST:443:$NODE" "https://$HOST/healthz"; then break; fi
 	[ "$i" = 12 ] && { echo "Traefik on $NODE does not route $HOST to the site" >&2; exit 1; }
 	sleep 5
 done
@@ -50,7 +50,7 @@ if [ "$(dig +short "$HOST" A | tail -1)" != "$NODE" ]; then
 fi
 echo "→ checking https://$HOST/"
 for i in $(seq 1 30); do
-	if curl -fsS -o /dev/null "https://$HOST/healthz"; then break; fi
+	if curl -fs -o /dev/null "https://$HOST/healthz"; then break; fi
 	[ "$i" = 30 ] && { echo "https://$HOST/ is not answering over a valid certificate" >&2; exit 1; }
 	sleep 10
 done
