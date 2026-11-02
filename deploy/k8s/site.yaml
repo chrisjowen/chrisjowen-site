@@ -1,0 +1,128 @@
+# chrisjowen.net on the k3s cluster: nginx serving the static site, behind Traefik with a Let's Encrypt
+# certificate from cert-manager. deploy/deploy.sh applies this and sets the image tag.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: chrisjowen-site
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: chrisjowen-site
+  labels:
+    app: chrisjowen-site
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: chrisjowen-site
+  template:
+    metadata:
+      labels:
+        app: chrisjowen-site
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 101
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: web
+          # Imported straight into k3s's containerd by deploy.sh; never pulled from a registry.
+          image: chrisjowen-site:latest
+          imagePullPolicy: Never
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  namespace: chrisjowen-site
+spec:
+  selector:
+    app: chrisjowen-site
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: https-redirect
+  namespace: chrisjowen-site
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+---
+# One certificate for both names. nginx sends www.chrisjowen.net on to the apex.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web
+  namespace: chrisjowen-site
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.middlewares: chrisjowen-site-https-redirect@kubernetescrd
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - chrisjowen.net
+        - www.chrisjowen.net
+      secretName: chrisjowen-net-tls
+  rules:
+    - host: chrisjowen.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  name: http
+    - host: www.chrisjowen.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  name: http
