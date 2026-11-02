@@ -1,0 +1,6 @@
+node_modules
+dist
+.git
+.serena
+.claude
+CONTENT-TODO.md

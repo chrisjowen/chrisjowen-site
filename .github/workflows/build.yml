@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build the site and check it
+        run: npm run check
+
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the nginx image
+        run: docker build -f deploy/Dockerfile -t chrisjowen-site:ci .
+      - name: Serve it and check it answers
+        run: |
+          docker run -d --rm --name site -p 8080:8080 --read-only --tmpfs /tmp chrisjowen-site:ci
+          for i in $(seq 1 20); do curl -fsS -o /dev/null http://127.0.0.1:8080/healthz && break; sleep 1; done
+          curl -fsS http://127.0.0.1:8080/ | grep -q '<title>Chris Owen'
+          for f in og.jpg favicon.ico favicon.svg apple-touch-icon.png sitemap.xml robots.txt; do curl -fsS -o /dev/null "http://127.0.0.1:8080/$f"; done
+          test "$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/nope)" = 404
+          test "$(curl -sS -o /dev/null -w '%{http_code} %{redirect_url}' -H 'Host: www.chrisjowen.net' http://127.0.0.1:8080/writing)" = '301 https://chrisjowen.net/writing'
+          docker stop site
