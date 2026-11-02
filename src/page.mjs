@@ -3,9 +3,6 @@ import { LOGOS, REPOS, SITE, SKILLS } from './content.mjs';
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-/** A fact still to come from Chris: invisible on the page, findable in the source. */
-const todo = (what) => `<!-- TODO(chris): ${what} -->`;
-
 const SQUIGGLE = `<svg class="squiggle" width="74" height="10" viewBox="0 0 74 10" fill="none" aria-hidden="true"><path d="M1 7.5 5.5 2.5 10 7.5 14.5 2.5 19 7.5 23.5 2.5 28 7.5 32.5 2.5 37 7.5 41.5 2.5 46 7.5 50.5 2.5 55 7.5 59.5 2.5 64 7.5 68.5 2.5 73 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
 const ico = (name) => `<span class="ico i-${name}" aria-hidden="true"></span>`;
@@ -141,7 +138,6 @@ export function render({ asset, pic, css, js, og, themeScript, csp, year }) {
 
   <div class="worked">
     <p class="cap">Worked at and with</p>
-    ${todo('Uncharted: an official logo, to replace the text wordmark')}
     <div class="logos">
       ${logos(asset)}
     </div>
@@ -192,7 +188,6 @@ export function render({ asset, pic, css, js, og, themeScript, csp, year }) {
     <li><time datetime="2010-10-02">Oct 2010</time><div><a href="https://enginechris.wordpress.com/2010/10/02/instant-test-cycle-in-the-net-world/">Instant test cycle in the .NET world</a><div class="src">Blog</div></div></li>
     <li><time datetime="2009-11-23">Nov 2009</time><div><a href="https://enginechris.wordpress.com/2009/11/23/my-thoughts-on-using-dotless-and-the-less-syntax/">My thoughts on using DotLess and the Less syntax</a><div class="src">Blog</div></div></li>
   </ul>
-  ${todo('Writing: LinkedIn articles older than the three public ones, and which early posts from enginechris.wordpress.com to keep')}
 </section>
 
 <!-- ============ PROJECTS ============ -->
@@ -274,11 +269,9 @@ export function render({ asset, pic, css, js, og, themeScript, csp, year }) {
 
   <h3 class="sub first">Work history</h3>
   <p>Roles since 2009. <a class="u" href="${SITE.linkedin}">Full profile on LinkedIn</a></p>
-  ${todo('Work history: whether to add roles before 2009')}
   <ol class="timeline">
     <li class="current">
       <div class="role">AI Platform team</div>
-      ${todo('GIC, AI Platform team: role title and start date')}
       <div class="where"><a class="u" href="https://www.linkedin.com/company/gic">GIC</a><span class="dot"></span><span>🇸🇬 Singapore</span></div>
       <div class="when">Present</div>
       <ul>
@@ -287,7 +280,6 @@ export function render({ asset, pic, css, js, og, themeScript, csp, year }) {
     </li>
     <li>
       <div class="role">Lead, Internal Developer Platform</div>
-      ${todo('GIC, Internal Developer Platform lead: dates')}
       <div class="where"><a class="u" href="https://www.linkedin.com/company/gic">GIC</a><span class="dot"></span><span>🇸🇬 Singapore</span></div>
       <ul>
         <li>Led the team building GIC's internal developer platform: tooling, guides, automation and software blueprints.</li>
@@ -355,13 +347,11 @@ export function render({ asset, pic, css, js, og, themeScript, csp, year }) {
 
   <h3 class="sub">Background</h3>
   <p>Education, certifications and the sectors I've worked in.</p>
-  ${todo('Shane Auckland recommendation: confirm it may be quoted, then add it back as a fourth box')}
   <div class="boxes">
     <div class="box">
       <h4>Education</h4>
       <p><b>BSc Internet Computing, 2:1</b></p>
       <p>University of Hull, UK</p>
-      ${todo('University of Hull: years')}
     </div>
     <div class="box">
       <h4>Sectors</h4>
@@ -386,7 +376,6 @@ export function render({ asset, pic, css, js, og, themeScript, csp, year }) {
   ${SQUIGGLE}
   <p>The best way to reach me is on <a class="u" href="${SITE.linkedin}">LinkedIn</a>.</p>
   <p>For the projects, open an issue on <a class="u" href="${SITE.github}">GitHub</a>.</p>
-  ${todo('Contact email: which address to show, if any')}
 </section>
 
 </main>

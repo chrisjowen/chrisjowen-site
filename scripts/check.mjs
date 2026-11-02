@@ -1,10 +1,9 @@
 // Checks a built dist/: every local file the page or its CSS names exists, nothing loads from another
 // origin, the share card, favicon and sitemap are in place, the page carries nothing private, and the
-// first view stays within its weight budget. Lists the facts still to come from Chris.
+// first view stays within its weight budget.
 // Usage: node scripts/build.mjs && node scripts/check.mjs
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
-import { TODOS } from '../src/content.mjs';
 
 const DIST = path.resolve(import.meta.dirname, '../dist');
 const html = readFileSync(path.join(DIST, 'index.html'), 'utf8');
@@ -42,10 +41,8 @@ if (!readFileSync(path.join(DIST, 'sitemap.xml'), 'utf8').includes('<loc>https:/
 // Only distilled CV content belongs here: no CV file, phone number or personal email.
 if (/cv-20\d\d|\.pdf"|hotmail|gmail|mailto:|\+65|(?<![\w/-])[689]\d{3}[\s-]?\d{4}(?![\w/])/.test(html)) problems.push('page names a CV file, phone number or email address');
 
-// Unknown facts stay out of the rendered page, as TODO comments only.
-if (/>\s*TODO|class="todo"/i.test(html)) problems.push('a TODO is visible on the page');
-const marked = [...html.matchAll(/<!-- TODO\(chris\): (.*?) -->/g)].map((m) => m[1]);
-if (marked.length !== TODOS.length) problems.push(`the page marks ${marked.length} TODOs but src/content.mjs lists ${TODOS.length}`);
+// Open questions stay in CONTENT-TODO.md, out of the page and its source.
+if (/TODO/i.test(html)) problems.push('the page names a TODO');
 
 // The first view: HTML, CSS, JS, the font and the logos.
 const KB = (f) => statSync(path.join(DIST, f)).size / 1024;
@@ -63,4 +60,3 @@ if (problems.length) {
 	process.exit(1);
 }
 console.log(`✓ ${loads.size} local files present, no outside loads, share card and favicon in place, first view ${first.toFixed(0)} KB`);
-console.log(`  ${TODOS.length} facts still to come from Chris (TODO comments in the page):\n${TODOS.map((t) => `  - ${t}`).join('\n')}`);

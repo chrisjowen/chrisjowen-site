@@ -38,16 +38,7 @@ The work history is distilled from Chris's CV and his own notes; the CV itself i
 
 ### Still to come
 
-Facts not yet known are left off the page. Each is an HTML comment `<!-- TODO(chris): … -->` where it belongs, listed in `TODOS` in `src/content.mjs`, and printed by `npm run check`:
-
-- GIC, AI Platform team: role title and start date
-- GIC, Internal Developer Platform lead: dates
-- University of Hull: years
-- Shane Auckland's LinkedIn recommendation: confirm it may be quoted before showing it
-- Contact email: which address to show, if any
-- Uncharted: an official logo (the strip shows a text wordmark)
-- Writing: LinkedIn articles older than the three public ones, and which early blog posts to keep
-- Work history: whether to add roles before 2009
+Facts not yet known are left off the page and listed in `CONTENT-TODO.md`, which is not served.
 
 ## Deploy
 

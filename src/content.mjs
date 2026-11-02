@@ -1,5 +1,5 @@
 // The site's structured content: links, logos, icons, skills and repositories. The prose is in
-// src/page.mjs. Facts still to come from Chris are listed in TODOS and marked in the page source.
+// src/page.mjs. Facts still to come from Chris are listed in CONTENT-TODO.md.
 
 export const SITE = {
 	url: 'https://chrisjowen.net',
@@ -11,19 +11,6 @@ export const SITE = {
 	github: 'https://github.com/chrisjowen',
 	medium: 'https://medium.com/@cowen'
 };
-
-// Facts the page leaves out until Chris supplies them. Each is also an HTML comment
-// <!-- TODO(chris): … --> where it belongs in the built page; scripts/check.mjs lists them.
-export const TODOS = [
-	'GIC, AI Platform team: role title and start date',
-	'GIC, Internal Developer Platform lead: dates',
-	'University of Hull: years',
-	'Shane Auckland recommendation: confirm it may be quoted before showing it',
-	'Contact email: which address to show, if any',
-	'Uncharted: an official logo (the strip shows a text wordmark)',
-	'Writing: LinkedIn articles older than the three public ones, and which early blog posts to keep',
-	'Work history: whether to add roles before 2009'
-];
 
 // Employer and client logos for the "Worked at and with" strip, in order. `h` is the display height in
 // pixels. `colour` says where hovering may show the original colours: on the dark theme, the light
